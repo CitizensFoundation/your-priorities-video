@@ -17,29 +17,33 @@ import { ButtonSharedStyles } from './button-shared-styles.js';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
 import { Record } from 'videojs-record/src/js/videojs.record';
+import { YpVideoUploader } from './yp-video-uploader'
 
 class YpVideoRecorder extends connect(store)(LitElement) {
   _render({_recordedData}) {
     return html`
-        <div>
+        <div class="vertical">
           <video id="ypVideoRecorder" class="video-js"></video>
+          <yp-video-uploader hidden="${!_recordedData}"></yp-video-uploader>
         </div>
-
-        ${ _recordedData ? html`
-          <yp-video-uploader recordedData=${_recordedData}></yp-video-uploader>
-        ` : null }  
       `
   }
 
   static get properties() { return {
     _player: Object,
-    _recordedData: Object
+    _recordedData: Object,
+    maxLength: Number
   }}
 
-  // This is called every time something is updated in the store.
+  constructor() {
+    super();
+    if (!this.maxLength) {
+      this.maxLength = 7;
+    }
+  }
+
   _stateChanged(state) {
-    this._items = cartItemsSelector(state);
-    this._total = cartTotalSelector(state);
+    this._recordedData = state.videoRecorder.recordedData;
   }
 
   _firstRendered() {
@@ -65,9 +69,9 @@ class YpVideoRecorder extends connect(store)(LitElement) {
       console.log('finished recording');
       if (this._player.recordedData.video) {
         // for chrome for audio+video
-        this._recordedData = this._player.recordedData.video;
+        store.dispatch(finishVideoRecord(this._player.recordedData.video));
       } else {
-        this._recordedData = this._player.recordedData;
+        store.dispatch(finishVideoRecord(this._player.recordedData));
       }
     });
   }
@@ -82,7 +86,7 @@ class YpVideoRecorder extends connect(store)(LitElement) {
           record: {
               audio: true,
               video: true,
-              maxLength: 10,
+              maxLength: this.maxLength,
               debug: true
           }
       }

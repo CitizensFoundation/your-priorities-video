@@ -10,30 +10,50 @@ import { connect } from 'pwa-helpers/connect-mixin.js';
 // This element is connected to the redux store.
 import { store } from '../store.js';
 import { ButtonSharedStyles } from './button-shared-styles.js';
+import { Button } from "@material/mwc-button"
 
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 
 class YpVideoUploader extends connect(store)(LitElement) {
-  _render({_recordedData}) {
+  _render({_recordedData, _isUploading}) {
     return html`
-        <div>
-          <video id="ypVideoPreviewer" class="video-js"></video>
+        <div class="vertical">
+          <div>
+            <video id="ypVideoPreviewer" class="video-js"></video>
+          </div>
+
+          <mwc-button raised hidden="${_isUploading}" on-click="${() => store.dispatch(uploadVideo(this._recordedData))}">
+            ${t('upload_video')}
+          </mwc-button>
+          <mwc-button raised hidden="${_isUploading}" on-click="${() => store.dispatch(deleteVideoPreview())}">
+            ${t('delete_video')}
+          </mwc-button>
+          <mwc-button raised hidden="${!_isUploading}" on-click="${() => store.dispatch(cancelVideoUpload())}">
+            ${t('cancel_upload')}
+          </mwc-button>
         </div>
       `
   }
 
   static get properties() { return {
     _player: Object,
-    recordedData: Object
+    _recordedData: Object,
+    _isUploading: Boolean
   }}
 
-  // This is called every time something is updated in the store.
   _stateChanged(state) {
-    this._items = cartItemsSelector(state);
-    this._total = cartTotalSelector(state);
+    if (this._isUploading && !state.videoRecorder.isUploading) {
+      this._uploadFinished();
+    } else {
+      this._isUploading = state.videoRecorder.isUploading;
+    }
+    this._recordedData = state.videoRecorder.recordedData;
+    if (this._recordedData) {
+      this._setupPreviewVideo();
+    }
   }
 
-  _firstRendered() {
+  _setupPreviewVideo() {
     this._player = videojs("#ypVideoPreviewer", this._getVideoProps(), function onPlayerReady(){
       this._player.src({type:'video/mp4', src: URL.createObjectURL(this.recordedData)});
       this._player.load();
@@ -55,16 +75,8 @@ class YpVideoUploader extends connect(store)(LitElement) {
       controls: true,
       width: 320,
       height: 240,
-      fluid: false,
-      plugins: {
-          record: {
-              audio: true,
-              video: true,
-              maxLength: 10,
-              debug: true
-          }
-      }
+      fluid: false
   }
 }
 
-window.customElements.define('yp-video-recorder', YpVideoRecorder);
+window.customElements.define('yp-video-uploader', YpVideoUploader);
