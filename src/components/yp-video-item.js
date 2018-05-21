@@ -7,19 +7,29 @@ import { LitElement, html } from '@polymer/lit-element';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 
 class YpVideoItem extends LitElement {
-  _render(videoItem) {
+  _render(videoItem, _videoPreviewActive) {
     return html`
-      ${videoItem.User.name}:
-      <img src="${videoItem.selectedPreview}" on-click="${() => this._playVideo()}">
-      <video id="ypVideoPreviewer" class="video-js"></video>
+      <img hidden="${_videoPreviewActive} src="${videoItem.selectedPreview}" on-click="${() => this._playVideo()}">
+      <video hidden="${!_videoPreviewActive}" id="ypVideoPreviewer" class="video-js"></video>
     `;
   }
 
   static get properties() {
     return {
       videoItem: Object,
+      width: Number,
+      height: Number,
       _videoPreviewActive: Boolean
     }
+  }
+
+  constructor() {
+    super();
+    if (!this.width)
+      this.width = 320;
+    
+    if (!this.height)
+      this.height = 240;
   }
 
   _playVideo() {
@@ -29,6 +39,8 @@ class YpVideoItem extends LitElement {
       this._player.play();
       videojs.log('Using video.js', videojs.VERSION);
     });
+
+    this._videoPreviewActive = true;
 
     this._player.on('deviceError', function() {
       console.log('device error:', this._player.deviceErrorCode);
@@ -42,10 +54,10 @@ class YpVideoItem extends LitElement {
   _getVideoProps() {
     return {
       controls: true,
-      width: 320,
-      height: 240,
+      width: this.width,
+      height: this.height,
       fluid: false
-  }}  
+  }}
 }
 
 window.customElements.define('yp-video-item', YpVideoItem);
