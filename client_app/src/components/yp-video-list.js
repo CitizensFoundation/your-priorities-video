@@ -45,7 +45,7 @@ export class YpVideoList extends connect(store)(LitElement) {
 
   static get properties() {
     return {
-      _list: Object,
+      pointValue: Number,
 
       _favorites: Object,
 

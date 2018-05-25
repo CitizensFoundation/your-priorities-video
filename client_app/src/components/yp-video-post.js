@@ -4,16 +4,27 @@ Copyright (c) 2018 Citizens Foundation. All rights reserved. AGPL License.
 */
 
 import { LitElement, html } from '@polymer/lit-element';
+
+import { connect } from 'pwa-helpers/connect-mixin.js';
+
+// This element is connected to the redux store.
+import { store } from '../store.js';
+import { removeFromCart } from '../actions/shop.js';
+import { cartItemsSelector, cartTotalSelector } from '../reducers/shop.js';
+import { removeFromCartIcon } from './my-icons.js';
+import { ButtonSharedStyles } from './button-shared-styles.js';
+
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 
-class YpVideoPost extends LitElement {
+class YpVideoPost extends connect(store)(LitElement) {
   _render(videoItem, _videoPreviewActive) {
     return html`
       <div class="vertical">
         <yp-video-item item="${ post.data.videoItem }"></yp-video-item>
       </div>
       <div class="horizontal wrap">
-        <yp-video-list 
+        <yp-video-list pointValue="1"></yp-video-list>
+        <yp-video-list pointValue="-1"></yp-video-list>
       </div>
       <img hidden="${_videoPreviewActive} src="${videoItem.selectedPreview}" on-click="${() => this._playVideo()}">
       <video hidden="${!_videoPreviewActive}" id="ypVideoPreviewer" class="video-js"></video>
@@ -22,7 +33,7 @@ class YpVideoPost extends LitElement {
 
   static get properties() {
     return {
-      videoItem: Object,
+      post: Object,
       width: Number,
       height: Number,
       _videoPreviewActive: Boolean
@@ -36,6 +47,13 @@ class YpVideoPost extends LitElement {
     
     if (!this.height)
       this.height = 240;
+  }
+
+
+  _stateChanged(state) {
+    if (state.currentPost && state.currentPost!=this.post) {
+      this.post = state.currentPost;
+    }
   }
 
   _playVideo() {
