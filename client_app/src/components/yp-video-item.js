@@ -7,19 +7,18 @@ import { LitElement, html } from '@polymer/lit-element';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 
 class YpVideoItem extends LitElement {
-  _render(videoItem, _videoPreviewActive) {
+  _render( post ) {
     return html`
-      <img hidden="${_videoPreviewActive} src="${videoItem.selectedPreview}" on-click="${() => this._playVideo()}">
-      <video hidden="${!_videoPreviewActive}" id="ypVideoPreviewer" class="video-js"></video>
+      <img hidden="${post.videoPreviewActive} src="${post.selectedPreview}" on-click="${() => this._playVideo()}">
+      <video hidden="${!post.videoPreviewActive}" id="ypVideoPreviewer" class="video-js"></video>
     `;
   }
 
   static get properties() {
     return {
-      videoItem: Object,
+      post: Object,
       width: Number,
       height: Number,
-      _videoPreviewActive: Boolean
     }
   }
 

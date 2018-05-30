@@ -21,53 +21,38 @@ store.addReducers({
   items
 });
 
-store.dispatch(loadFavorites());
-
 export class YpVideoList extends connect(store)(LitElement) {
-  _render({ _favorites, _items = [], _list, _pathname }) {
-    const loading _list.isFetching;
+  _render({ videoPoints = [], _pointQualities, _pointVideoPreviewEnabledFor, _isFetching }) {
     return html`
-    ${sharedStyles}
-    <style>
-      :host > a {
-        display: inline-block;
-        margin: 0 8px 8px 0;
-      }
-    </style>
-    ${repeat(_items, (item) => html`
-      <yp-video-item
-          videoItem="${item}"
-          isFavorite="${_favorites && item && _favorites[item.id]}">
-      </yp-video-item>
-    `)}
+      ${sharedStyles}
+      <style>
+        :host > a {
+          display: inline-block;
+          margin: 0 8px 8px 0;
+        }
+      </style>
+      ${ _isFetching ? html`<div>Fetching...</div>` : null }
+      ${repeat(videoPoints, (point) => html`
+        <yp-video-item
+            item="${point}"
+            videoEnabled="${_pointVideoPreviewEnabledFor && point && _pointVideoPreviewEnabledFor[point.id] }"
+            pointQuality="${_pointQualities && point && _pointQualities[point.id]}">
+        </yp-video-item>
+      `)}
     `;
   }
 
   static get properties() {
     return {
-      pointValue: Number,
-
-      _favorites: Object,
-
-      _items: Array,
-
-      _pathname: String
+      videoPoints: Array,
+      _pointQualitities: Object,
+      _isFetching: Boolean
     }
   }
 
   _stateChanged(state) {
-    const list = currentListSelector(state);
-    if (list) {
-      updateMetadata({ title: list.id });
-      document.body.setAttribute('list', list.id);
-      this._favorites = state.favorites;
-      this._list = list;
-      this._pathname = window.location.pathname;
-      const items = currentItemsSelector(state);
-      if (items) {
-        this._items = items;
-      }
-    }
+    this._pointQualities = state.user ? state.user.pointQualities : null;
+    this._isFetching = state.app.points.isFetching ? true : false;
   }
 }
 
