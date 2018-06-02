@@ -21,7 +21,6 @@ class YpVideoUploader extends connect(store)(LitElement) {
           <div>
             <video id="ypVideoPreviewer" class="video-js"></video>
           </div>
-
           <mwc-button raised hidden="${_isUploading}" on-click="${() => store.dispatch(uploadVideo(this._recordedData))}">
             ${t('upload_video')}
           </mwc-button>
