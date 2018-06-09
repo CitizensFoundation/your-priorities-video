@@ -12,12 +12,15 @@ import { installMediaQueryWatcher } from 'pwa-helpers/media-query.js';
 import { store } from '../store.js';
 import { removeFromCart } from '../actions/shop.js';
 import { cartItemsSelector, cartTotalSelector } from '../reducers/shop.js';
+
+
 import { removeFromCartIcon } from './my-icons.js';
 import { ButtonSharedStyles } from './button-shared-styles.js';
 
 import { videojs } from '../../node_modules/video.js/dist/video.es';
+import { PageViewElement } from './page-view-element.js';
 
-class YpVideoPost extends connect(store)(LitElement) {
+class YpVideoPost extends connect(store)(PageViewElement) {
   _render( _post, _pointsFor, _pointsAgainst, _pointsInterleaved ) {
     return html`
       <div class="vertical">

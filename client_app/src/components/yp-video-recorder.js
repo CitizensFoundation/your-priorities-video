@@ -19,7 +19,9 @@ import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
 import { Record } from 'videojs-record/src/js/videojs.record';
 import { YpVideoUploader } from './yp-video-uploader'
 
-class YpVideoRecorder extends connect(store)(LitElement) {
+import { PageViewElement } from './page-view-element.js';
+
+class YpVideoRecorder extends connect(store)(PageViewElement) {
   _render({_recordedData}) {
     return html`
         <div class="vertical">
