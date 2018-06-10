@@ -6,19 +6,18 @@ Copyright (c) 2018 Citizens Foundation Iceland. All rights reserved. AGPL licens
 export const REQUEST_POST = 'REQUEST_POST';
 export const RECEIVE_POST = 'RECEIVE_POST';
 export const FAIL_POST = 'FAIL_POST';
+export const ADD_POST = 'ADD_POST';
+export const HAVE_ADDED_POST = 'HAVE_ADDED_POST';
+export const FAIL_ADD_POST = 'FAIL_ADD_POST';
 
 export const fetchPost = (id) => (dispatch, getState) => {
   dispatch(requestPost(id));
   const state = getState();
-  const post = state.posts && state.posts.items && state.posts.items[id];
+  const post = state.post && state.post.id === id ? state.post : null;
   if (post) {
-    // post found in state.posts.items or state.favorites.items
     dispatch(receivePost(id));
-    // let the calling code know there's nothing to wait for.
     return Promise.resolve();
   } else {
-    // fetch post data given the post id.
-    // also return a promise to wait for.
     return fetch(`/api/posts/${id}`)
       .then(res => res.json())
       .then(data => {
@@ -50,6 +49,28 @@ const receivePost = (id, item) => {
 const failPost = (id) => {
   return {
     type: FAIL_POST,
+    id
+  };
+};
+
+const addPost = (postItem) => {
+  return {
+    type: ADD_POST,
+    id
+  };
+};
+
+const haveAddedPost = (id, item) => {
+  return {
+    type: HAVE_ADDED_POST,
+    id,
+    item
+  };
+};
+
+const failAddPost = (id) => {
+  return {
+    type: FAIL_ADD_POST,
     id
   };
 };
