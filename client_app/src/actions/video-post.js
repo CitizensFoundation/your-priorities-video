@@ -27,8 +27,29 @@ export const fetchPost = (id) => (dispatch, getState) => {
           dispatch(receivePost(id, data));
         }
       })
-      .catch((e) => dispatch(failPost(id)));
+      .catch((e) => {
+        console.error(e);
+        dispatch(failPost(id))
+      });
   }
+};
+
+export const postPost = (postData) => (dispatch, getState) => {
+  dispatch(addPost());
+  const state = getState();
+  return fetch(`/api/posts/${id}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        dispatch(failAddPost(data.error));
+      } else {
+        dispatch(haveAddedPost(id, data));
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      dispatch(failAddPost())
+    });
 };
 
 const requestPost = (id) => {
@@ -46,17 +67,18 @@ const receivePost = (id, item) => {
   };
 };
 
-const failPost = (id) => {
+const failPost = (id, error) => {
   return {
     type: FAIL_POST,
-    id
+    id,
+    error
   };
 };
 
-const addPost = (postItem) => {
+const addPost = (postData) => {
   return {
     type: ADD_POST,
-    id
+    postData
   };
 };
 
@@ -68,9 +90,10 @@ const haveAddedPost = (id, item) => {
   };
 };
 
-const failAddPost = (id) => {
+const failAddPost = (id, error) => {
   return {
     type: FAIL_ADD_POST,
-    id
+    id,
+    error
   };
 };
