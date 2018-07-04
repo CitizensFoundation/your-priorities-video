@@ -26,7 +26,7 @@ export const fetchPoints = (postId) => (dispatch, getState) => {
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          dispatch(failRequestPoints(postId));
+          dispatch(failRequestPoint(postId));
         } else {
           dispatch(receivePoints(postId, data));
         }
@@ -38,10 +38,10 @@ export const fetchPoints = (postId) => (dispatch, getState) => {
   }
 };
 
-export const postPoint = (pointData) => (dispatch, getState) => {
+export const postPoint = (postId, pointData) => (dispatch, getState) => {
   dispatch(addPoint());
   const state = getState();
-  return fetch(`/api/points/${id}`)
+  return fetch(`/api/points/${postId}`, { method: 'post' })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
@@ -59,18 +59,36 @@ export const postPoint = (pointData) => (dispatch, getState) => {
 export const deletePoint = (pointData) => (dispatch, getState) => {
   dispatch(deletePoint());
   const state = getState();
-  return fetch(`/api/points/${id}`)
+  return fetch(`/api/points/${pointData.id}`, { method: 'delete' })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
-        dispatch(failDeletePoint(data.error));
+        dispatch(failPoint(data.error));
       } else {
         dispatch(haveDeletedPoint(id, data));
       }
     })
     .catch((e) => {
       console.error(e);
-      dispatch(failDeletePoint())
+      dispatch(failPoint())
+    });
+};
+
+export const updatePoint = (pointData) => (dispatch, getState) => {
+  dispatch(deletePoint());
+  const state = getState();
+  return fetch(`/api/points/${pointData.id}`, { method: 'put' })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        dispatch(failPoint(data.error));
+      } else {
+        dispatch(haveUpdatedPoint(pointData.id, data));
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+      dispatch(failPoint())
     });
 };
 
@@ -89,7 +107,7 @@ const receivePoint = (id, item) => {
   };
 };
 
-const failPoint = (id, error) => {
+const failRequestPoint = (id, error) => {
   return {
     type: FAIL_REQUEST_POINTS,
     id,
@@ -112,9 +130,9 @@ const haveAddedPoint = (id, item) => {
   };
 };
 
-const failAddPoint = (id, error) => {
+const failPoint = (id, error) => {
   return {
-    type: FAIL_ADD_POINT,
+    type: FAIL_POINT,
     id,
     error
   };
@@ -135,10 +153,17 @@ const haveDeletedPoint = (id, item) => {
   };
 };
 
-const failDeletePoint = (id, error) => {
+const updatePoint = (pointData) => {
   return {
-    type: FAIL_DELETE_POINT,
+    type: UPDATE_POINT,
+    pointData
+  };
+};
+
+const haveUpdatedPoint = (id, item) => {
+  return {
+    type: HAVE_UPDATED_POINT,
     id,
-    error
+    item
   };
 };

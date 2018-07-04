@@ -32,6 +32,7 @@ export const points = (state = {}, action) => {
     case ADD_POINT:
     case DELETE_POINT:
     case UPDATE_POINT:
+    case HAVE_DELETED_POINT:
       return {
         ...state,
         failure: false,
@@ -69,7 +70,7 @@ export const pointsSelector = createSelector(
   }
 );
 
-export const itemsSelector = state => state.pointss && state.points.items;
+export const itemsSelector = state => state.points && state.points.items;
 
 export const itemListSelector = createSelector(
   itemsSelector,
