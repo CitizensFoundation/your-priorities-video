@@ -30,19 +30,22 @@ export const points = (state = {}, action) => {
         error: action.error
       };
     case ADD_POINT:
+    case DELETE_POINT:
+    case UPDATE_POINT:
       return {
         ...state,
         failure: false,
         isPosting: true
       };
     case HAVE_ADDED_POINT:
+    case HAVE_UPDATED_POINT:
       return {
         ...state,
         item: action.item,
         failure: false,
         isPosting: false
       };
-    case FAIL_ADD_POINT:
+    case FAIL_POINT:
       return {
         ...state,
         failure: true,
