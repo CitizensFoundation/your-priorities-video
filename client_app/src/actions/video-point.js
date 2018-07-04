@@ -5,7 +5,6 @@ Copyright (c) 2018 Citizens Foundation Iceland. All rights reserved. AGPL licens
 
 export const REQUEST_POINTS = 'REQUEST_POINTS';
 export const RECEIVE_POINTS = 'RECEIVE_POINTS';
-export const FAIL_REQUEST_POINTS = 'FAIL_REQUEST_POINTS';
 export const ADD_POINT = 'ADD_POINT';
 export const HAVE_ADDED_POINT = 'HAVE_ADDED_POINT';
 export const DELETE_POINT = 'DELETE_POINT';
@@ -26,22 +25,22 @@ export const fetchPoints = (postId) => (dispatch, getState) => {
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          dispatch(failRequestPoint(postId));
+          dispatch(failPoint(postId));
         } else {
           dispatch(receivePoints(postId, data));
         }
       })
       .catch((e) => {
         console.error(e);
-        dispatch(failRequestPoint(postId))
+        dispatch(failPoint(postId))
       });
   }
 };
 
-export const postPoint = (postId, pointData) => (dispatch, getState) => {
-  dispatch(addPoint());
+export const addPoint = (postId, pointData) => (dispatch, getState) => {
+  dispatch(addPointRequest());
   const state = getState();
-  return fetch(`/api/points/${postId}`, { method: 'post' })
+  return fetch(`/api/points/${postId}`, { method: 'POST' })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
@@ -57,15 +56,15 @@ export const postPoint = (postId, pointData) => (dispatch, getState) => {
 };
 
 export const deletePoint = (pointData) => (dispatch, getState) => {
-  dispatch(deletePoint());
+  dispatch(deletePointRequest());
   const state = getState();
-  return fetch(`/api/points/${pointData.id}`, { method: 'delete' })
+  return fetch(`/api/points/${pointData.id}`, { method: 'DELETE' })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
         dispatch(failPoint(data.error));
       } else {
-        dispatch(haveDeletedPoint(id, data));
+        dispatch(haveDeletedPoint(id));
       }
     })
     .catch((e) => {
@@ -75,9 +74,9 @@ export const deletePoint = (pointData) => (dispatch, getState) => {
 };
 
 export const updatePoint = (pointData) => (dispatch, getState) => {
-  dispatch(deletePoint());
+  dispatch(updatePointRequest());
   const state = getState();
-  return fetch(`/api/points/${pointData.id}`, { method: 'put' })
+  return fetch(`/api/points/${pointData.id}`, { method: 'PUT' })
     .then(res => res.json())
     .then(data => {
       if (data.error) {
@@ -107,15 +106,7 @@ const receivePoint = (id, item) => {
   };
 };
 
-const failRequestPoint = (id, error) => {
-  return {
-    type: FAIL_REQUEST_POINTS,
-    id,
-    error
-  };
-};
-
-const addPoint = (pointData) => {
+const addPointRequest = (pointData) => {
   return {
     type: ADD_POINT,
     pointData
@@ -138,22 +129,21 @@ const failPoint = (id, error) => {
   };
 };
 
-const deletePoint = (pointData) => {
+const deletePointRequest = (pointData) => {
   return {
     type: DELETE_POINT,
     pointData
   };
 };
 
-const haveDeletedPoint = (id, item) => {
+const haveDeletedPoint = (id) => {
   return {
     type: HAVE_DELETED_POINT,
-    id,
-    item
+    id
   };
 };
 
-const updatePoint = (pointData) => {
+const updatePointRequest = (pointData) => {
   return {
     type: UPDATE_POINT,
     pointData

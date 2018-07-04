@@ -1,8 +1,9 @@
 import { createSelector } from 'reselect';
 
 import {
-  REQUEST_POINTS, RECEIVE_POINTS, FAIL_REQUEST_POINTS,
-  ADD_POINT, HAVE_ADDED_POINT, FAIL_ADD_POINT
+  REQUEST_POINTS, RECEIVE_POINTS, FAIL_POINT,
+  ADD_POINT, HAVE_ADDED_POINT, UPDATE_POINT, HAVE_UPDATED_POINT,
+  DELETE_POINT, HAVE_DELETED_POINT
 } from '../actions/points.js';
 
 export const points = (state = {}, action) => {
@@ -21,13 +22,6 @@ export const points = (state = {}, action) => {
         items: action.items,
         failure: false,
         isFetching: false
-      };
-    case FAIL_REQUEST_POINTS:
-      return {
-        ...state,
-        failure: true,
-        isFetching: false,
-        error: action.error
       };
     case ADD_POINT:
     case DELETE_POINT:
