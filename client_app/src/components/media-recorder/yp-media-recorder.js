@@ -5,7 +5,7 @@ Copyright (c) 2018 Citizens Foundation. All rights reserved. AGPL License.
 
 import { LitElement, html } from '@polymer/lit-element';
 
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 // This element is connected to the redux store.
 import { store } from '../store.js';
@@ -17,20 +17,11 @@ import { ButtonSharedStyles } from './button-shared-styles.js';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
 import { Record } from 'videojs-record/src/js/videojs.record';
-import { YpVideoUploader } from './yp-video-uploader'
+import { YpVideoUploader } from './yp-video-uploader.js'
 
 import { PageViewElement } from './page-view-element.js';
 
-class YpVideoRecorder extends connect(store)(PageViewElement) {
-  _render({_recordedData}) {
-    return html`
-        <div class="vertical">
-          <video id="ypVideoRecorder" class="video-js"></video>
-          <yp-video-uploader hidden="${!_recordedData}"></yp-video-uploader>
-        </div>
-      `
-  }
-
+class YpMediaRecorder extends connect(store)(PageViewElement) {
   static get properties() { return {
     _player: Object,
     _recordedData: Object,
@@ -42,6 +33,14 @@ class YpVideoRecorder extends connect(store)(PageViewElement) {
     if (!this.maxLength) {
       this.maxLength = 7;
     }
+  }
+
+  _render({_recordedData}) {
+    return html`
+        <div class="vertical">
+          <video id="ypVideoRecorder" class="video-js"></video>
+        </div>
+      `
   }
 
   _stateChanged(state) {
@@ -75,24 +74,8 @@ class YpVideoRecorder extends connect(store)(PageViewElement) {
       } else {
         store.dispatch(finishVideoRecord(this._player.recordedData));
       }
-    });
-  }
-  
-  _getVideoProps() {
-    return {
-      controls: true,
-      width: 320,
-      height: 240,
-      fluid: false,
-      plugins: {
-          record: {
-              audio: true,
-              video: true,
-              maxLength: this.maxLength,
-              debug: true
-          }
-      }
+    });    
   }
 }
 
-window.customElements.define('yp-video-recorder', YpVideoRecorder);
+window.customElements.define('yp-media-recorder', YpVideoRecorder);

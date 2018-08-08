@@ -4,7 +4,7 @@ Copyright (c) 2018 Citizens Foundation. All rights reserved. AGPL License.
 */
 
 import { LitElement, html } from '@polymer/lit-element';
-import { repeat } from 'lit-html/lib/repeat.js';
+import { repeat } from 'lit-html/lib/repeat';
 import { connect, updateMetadata } from 'pwa-helpers';
 import { fetchList, fetchListIfNeeded } from '../actions/lists.js';
 import { loadFavorites } from '../actions/favorites.js';

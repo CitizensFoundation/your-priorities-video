@@ -5,7 +5,7 @@ Copyright (c) 2018 Citizens Foundation. All rights reserved. AGPL License.
 
 import { LitElement, html } from '@polymer/lit-element';
 
-import { connect } from 'pwa-helpers/connect-mixin.js';
+import { connect } from 'pwa-helpers/connect-mixin';
 
 // This element is connected to the redux store.
 import { store } from '../store.js';
