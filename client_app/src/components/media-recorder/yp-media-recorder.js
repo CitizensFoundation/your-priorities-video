@@ -9,19 +9,15 @@ import { connect } from 'pwa-helpers/connect-mixin';
 
 // This element is connected to the redux store.
 import { store } from '../store.js';
-import { removeFromCart } from '../actions/shop.js';
-import { cartItemsSelector, cartTotalSelector } from '../reducers/shop.js';
-import { removeFromCartIcon } from './my-icons.js';
 import { ButtonSharedStyles } from './button-shared-styles.js';
 
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
-import { Record } from 'videojs-record/src/js/videojs.record';
-import { YpVideoUploader } from './yp-video-uploader.js'
 
 import { PageViewElement } from './page-view-element.js';
 
 class YpMediaRecorder extends connect(store)(PageViewElement) {
+  
   static get properties() { return {
     _player: Object,
     _recordedData: Object,
@@ -44,7 +40,9 @@ class YpMediaRecorder extends connect(store)(PageViewElement) {
   }
 
   _stateChanged(state) {
-    this._recordedData = state.videoRecorder.recordedData;
+    if (this._recordedData!=state.videoRecorder.recordedData) {
+      this.fire('yp-got-recorded-data');
+    }
   }
 
   _firstRendered() {
@@ -78,4 +76,4 @@ class YpMediaRecorder extends connect(store)(PageViewElement) {
   }
 }
 
-window.customElements.define('yp-media-recorder', YpVideoRecorder);
+window.customElements.define('yp-media-recorder', YpMediaRecorder);
