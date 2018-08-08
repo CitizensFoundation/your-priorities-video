@@ -6,12 +6,13 @@ Copyright (c) 2018 Citizens Foundation Iceland. All rights reserved. AGPL licens
 export const SET_VIDEO_RECORD = 'SET_VIDEO_RECORD';
 export const SET_VIDEO_PREVIEW = 'SET_VIDEO_PREVIEW';
 export const SET_VIDEO_POSTVIEW = 'SET_VIDEO_POSTVIEW';
+export const SET_VIDEO_EDIT_POST_DETAIL = 'SET_VIDEO_EDIT_POST_DETAIL';
 
 export const SET_AUDIO_RECORD = 'SET_AUDIO_RECORD';
 export const SET_AUDIO_PREVIEW = 'SET_AUDIO_PREVIEW';
 export const SET_AUDIO_POSTVIEW = 'SET_AUDIO_POSTVIEW';
 
-export const SET_EDIT_POST_DETAIL = 'SET_EDIT_POST_DETAIL';
+export const SET_AUDIO_EDIT_POST_DETAIL = 'SET_AUDIO_EDIT_POST_DETAIL';
 
 export const setRecordingVideoFlowToPreview = () => (dispatch) => {
   dispatch(recordingVideoFlowToPreview());
@@ -23,6 +24,10 @@ export const setRecordingVideoFlowToRecord = () => (dispatch) => {
 
 export const setRecordingVideoFlowToPostview = () => (dispatch) => {
   dispatch(recordingVideoFlowToPostview());
+};
+
+export const setRecordingVideoFlowEditPostDetail = () => (dispatch) => {
+  dispatch(recordingVideoFlowEditPostDetail());
 };
 
 export const setRecordingAudioFlowToPreview = () => (dispatch) => {
@@ -37,8 +42,8 @@ export const setRecordingAudioFlowToPostview = () => (dispatch) => {
   dispatch(recordingAudioFlowToPostview());
 };
 
-export const setRecordingVideoFlowEditPostDetail = () => (dispatch) => {
-  dispatch(recordingVideoFlowEditPostDetail());
+export const setRecordingAudioFlowEditPostDetail = () => (dispatch) => {
+  dispatch(recordingAudioFlowEditPostDetail());
 };
 
 const recordingVideoFlowToPreview = () => {
@@ -56,6 +61,12 @@ const recordingVideoFlowToRecord = () => {
 const recordingVideoFlowToPostview = () => {
   return {
     type: SET_VIDEO_POSTVIEW
+  };
+};
+
+const recordingVideoFlowEditPostDetail = () => {
+  return {
+    type: SET_VIDEO_EDIT_POST_DETAIL
   };
 };
 
@@ -77,9 +88,9 @@ const recordingVideoFlowToPostview = () => {
   };
 };
 
-const recordingVideoFlowEditPostDetail = () => {
+const recordingAudioFlowEditPostDetail = () => {
   return {
-    type: SET_EDIT_POST_DETAIL
+    type: SET_AUDIO_EDIT_POST_DETAIL
   };
 };
 
