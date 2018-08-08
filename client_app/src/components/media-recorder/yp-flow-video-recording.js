@@ -3,7 +3,7 @@
 Copyright (c) 2018 Citizens Foundation. All rights reserved. AGPL License.
 */
 
-import 'helium-animated-pages/helium-animated-pages.js';
+import 'helium-animated-pages/helium-animated-pages';
 
 import { connect } from 'pwa-helpers/connect-mixin';
 

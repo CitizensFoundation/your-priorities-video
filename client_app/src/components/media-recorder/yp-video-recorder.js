@@ -14,7 +14,7 @@ import { removeFromCart } from '../actions/shop.js';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
 import { Record } from 'videojs-record/src/js/videojs.record';
-import { YpMediaRecorder} from './yp-media-recorder';
+import { YpMediaRecorder} from './yp-media-recorder.js';
 
 class YpVideoRecorder extends YpMediaRecorder {
   _getVideoProps() {
