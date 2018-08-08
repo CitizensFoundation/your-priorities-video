@@ -14,9 +14,8 @@ import { ButtonSharedStyles } from './button-shared-styles.js';
 import { videojs } from '../../node_modules/video.js/dist/video.es';
 import { RecordRTC } from '../../node_modules/recordrtc/RecordRTC';
 
-import { PageViewElement } from './page-view-element.js';
 
-class YpMediaRecorder extends connect(store)(PageViewElement) {
+class YpMediaRecorder extends connect(store)(LitElement) {
   
   static get properties() { return {
     _player: Object,
